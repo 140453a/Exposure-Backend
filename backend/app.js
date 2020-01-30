@@ -25,8 +25,10 @@ app.get('/', (req,res) => {
   res.send('We are on home');
 });
 
-mongoose.connect(process.env.DATABASE_URL, {
+mongoose.connect('mongodb://mongo:27017/docker-node-mongo', {
   useNewUrlParser: true,
-  useUnifiedTopology: true  },);
+  useUnifiedTopology: true  },)
+  .then(() => console.log('MongoDB Connected'))
+  .catch(err => console.log(err));
 
-app.listen(2999, () => console.log('Server started'));
+app.listen(3000, () => console.log('Server started'));
