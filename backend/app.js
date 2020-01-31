@@ -5,8 +5,6 @@ const bodyParser = require('body-parser');
 const cors = require('cors')
 require('dotenv').config();
 
-// api
-const URL = 'https://www.flickr.com/services/rest/?method=flickr.test.echo&name=value'
 
 //middleware
 app.use(bodyParser.json());
@@ -29,10 +27,10 @@ app.use('/posts', postsRoute);
 app.get('/', (req,res) => {
   res.send('We are on home');
 });
-//mongodb://mongo:27017/docker-node-mongo
+//mongodb://mongo:27017/docker-node-mongo for docker launch
 //OR
-//process.env.DATABASE_URL
-mongoose.connect(process.env.DATABASE_URL, {
+//process.env.DATABASE_URL for local test
+mongoose.connect('mongodb://mongo:27017/docker-node-mongo', {
   useNewUrlParser: true,
   useUnifiedTopology: true  },)
   .then(() => console.log('MongoDB Connected'))
