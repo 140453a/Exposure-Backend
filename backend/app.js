@@ -30,7 +30,7 @@ app.get('/', (req,res) => {
 //mongodb://mongo:27017/docker-node-mongo for docker launch
 //OR
 //process.env.DATABASE_URL for local test
-mongoose.connect('mongodb://mongo:27017/docker-node-mongo', {
+mongoose.connect(process.env.DATABASE_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true  },)
   .then(() => console.log('MongoDB Connected'))
