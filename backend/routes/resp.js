@@ -12,6 +12,16 @@ router.get('/getPopular', async (req, res) => {
     exif_j[i].MyId = dataexif[0].photos.photo[i].id;
     exif_j[i].MyOwner = dataexif[0].photos.photo[i].owner;
     exif_j[i].MyTitle = dataexif[0].photos.photo[i].title;
+    exif_j[i].MyServer = dataexif[0].photos.photo[i].server;
+    exif_j[i].MyFarm = dataexif[0].photos.photo[i].farm;
+    exif_j[i].MySecret = dataexif[0].photos.photo[i].secret;
+    // https://www.flickr.com/services/api/misc.urls.html find urls here
+    // https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.jpg
+    let farm_id = exif_j[i].MyFarm;
+    let server_id = exif_j[i].MyServer;
+    let id = exif_j[i].MyId;
+    let secret = exif_j[i].MySecret;
+    exif_j[i].MyURL = `https://farm${farm_id}.staticflickr.com/${server_id}/${id}_${secret}.jpg`
 }
   res.json(exif_j);
 
