@@ -10,9 +10,11 @@ async function savePopular(req, res){
     {method: "GET",
     headers: {}});
     const data = await test.json();
+    //console.log(data.photos);
     exif_data = await getExif(data);
     //console.log(exif_data)
-    return await exif_data
+    var ret_array = [data, exif_data]
+    return await ret_array;
   }catch(err) {console.log(err)}
 }
 
@@ -24,7 +26,6 @@ async function getExif(data){
       let photoid = data.photos.photo[i].id;
       id_arr[i] = `https://www.flickr.com/services/rest/?method=flickr.photos.getExif&photo_id=${photoid}&format=json&nojsoncallback=1&api_key=${KEY}`
       });
-
 
       var promises = id_arr.map(url => fetch(url).then(y => y.text()));
       return Promise.all(promises)

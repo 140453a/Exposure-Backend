@@ -5,12 +5,14 @@ const helper = require('../api_helper.js')
 
 
 router.get('/getPopular', async (req, res) => {
-  let exif = await helper.savePopular();
+  let dataexif = await helper.savePopular();
   let exif_j = []
-  for (var i = 0; i < exif.length; i++) {
-    exif_j[i] = JSON.parse(exif[i])
+  for (var i = 0; i < dataexif[1].length; i++) {
+    exif_j[i] = JSON.parse(dataexif[1][i]);
+    exif_j[i].MyId = dataexif[0].photos.photo[i].id;
+    exif_j[i].MyOwner = dataexif[0].photos.photo[i].owner;
+    exif_j[i].MyTitle = dataexif[0].photos.photo[i].title;
 }
-
   res.json(exif_j);
 
 });
