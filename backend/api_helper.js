@@ -4,9 +4,9 @@ const async = require('async');
 const KEY = process.env.FLICKR_KEY;
 
 async function savePopular(req, res){
-  // Getting just 3 pictures to limit api calls while testing |v
+  // Getting just 3 pictures to limit api calls while testing                                                                               |v
   try{
-    let test = await fetch(`https://www.flickr.com/services/rest/?method=flickr.interestingness.getList&format=json&nojsoncallback=1&per_page=3&api_key=${KEY}`,
+    let test = await fetch(`https://www.flickr.com/services/rest/?method=flickr.interestingness.getList&format=json&nojsoncallback=1&per_page=20&api_key=${KEY}`,
     {method: "GET",
     headers: {}});
     const data = await test.json();
@@ -38,11 +38,5 @@ async function getExif(data){
 
 
 
-async function savePhoto(photo) {
-  let savedPhoto = await photo.save();
-  res.json(savedPhoto);
-}
 
-
-
-module.exports  = {savePhoto, savePopular};
+module.exports  = {savePopular};

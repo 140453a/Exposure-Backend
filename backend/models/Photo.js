@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const PhotoSchema = mongoose.Schema({
   photoid: {
-    type: Integer,
+    type: Number,
     required: true
   },
   owner: {
@@ -10,6 +10,10 @@ const PhotoSchema = mongoose.Schema({
     required: true
   },
   title: {
+    type: String,
+    required: true
+  },
+  url: {
     type: String,
     required: true
   },
