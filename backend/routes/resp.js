@@ -8,7 +8,14 @@ router.get('/getPopular', async (req, res) => {
   let dataexif = await helper.savePopular();
   let exif_j = []
   for (var i = 0; i < dataexif[1].length; i++) {
-    exif_j[i] = JSON.parse(dataexif[1][i]);
+    // Checking if picture had exif
+    temp = JSON.parse(dataexif[1][i]);
+    if(temp.stat == "fail"){
+
+        continue;
+    }
+    // Check complete, adding all information
+    exif_j[i] = temp;
     exif_j[i].MyId = dataexif[0].photos.photo[i].id;
     exif_j[i].MyOwner = dataexif[0].photos.photo[i].owner;
     exif_j[i].MyTitle = dataexif[0].photos.photo[i].title;
@@ -23,6 +30,7 @@ router.get('/getPopular', async (req, res) => {
     let secret = exif_j[i].MySecret;
     exif_j[i].MyURL = `https://farm${farm_id}.staticflickr.com/${server_id}/${id}_${secret}.jpg`
 }
+  // returning response of all json.
   res.json(exif_j);
 
 });
