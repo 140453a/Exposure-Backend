@@ -10,18 +10,62 @@ router.get('/getPopular', async (req, res) => {
   let exif_j = []
   for (var i = 0; i < dataexif[1].length; i++) {
     temp = JSON.parse(dataexif[1][i]);
-    // Checking if picture api call went through
+    // Checking if picture api call went through.
     if(temp.stat == "fail"){
+      exif_j[i] = temp;
+      exif_j[i].status = "fail";
         continue;
+    } else {
+      exif_j[i] = {};
+      exif_j[i].status = "success";
     }
-    // checking if exif data is exposed
-    else if {}
-    // checking if camera is in manual mode
 
-    // checking if lens length is 50 mm
 
+    // checking if exif data is exposed, and setting values
+    let a = 0, b = 0, c = 0, d = 0, e = 0;
+    for (let x = 0; x < Object.keys(temp.photo.exif).length; x++) { // iterate thru all exif data
+      if (temp.photo.exif[x].tag == "ExposureProgram"){
+        exif_j[i].MyExposureType = temp.photo.exif[x].raw._content;
+        a = 1;
+      }
+      else if (temp.photo.exif[x].tag == "ExposureTime"){
+        exif_j[i].MyExposureTime = temp.photo.exif[x].raw._content;
+        b = 1;
+      }
+      else if (temp.photo.exif[x].tag == "FNumber"){
+        exif_j[i].MyExposureFStop = temp.photo.exif[x].raw._content;
+        c = 1;
+      }
+      else if (temp.photo.exif[x].tag == "ISO"){
+        exif_j[i].MyExposureISO = temp.photo.exif[x].raw._content;
+        d = 1;
+      }
+      else if (temp.photo.exif[x].tag == "FocalLength"){
+        exif_j[i].MyExposureFocal = temp.photo.exif[x].raw._content;
+        e = 1;
+        if (exif_j[i].MyExposureFocal < 30 || exif_j[i].MyExposureFocal > 200){
+          exif_j[i].status = "fail";
+          exif_j[i].message = "Focal Length Out Of bounds."
+          e = 2;
+
+        }
+    }
+      else{
+        continue;
+      }
+    }
+    // Checking for focal length.
+    if (e == 2){
+      continue;
+    }
+    // Checking if a+b+c+d+e == 5, if not, status = fail.
+    if (a + b + c + d + e != 5){
+      exif_j[i].status = "fail";
+      exif_j[i].message = "Incorrect exif format"
+      continue;
+    }
     // Check complete, adding all information
-    exif_j[i] = temp;
+    //exif_j[i] = temp;
     exif_j[i].MyId = dataexif[0].photos.photo[i].id;
     exif_j[i].MyOwner = dataexif[0].photos.photo[i].owner;
     exif_j[i].MyTitle = dataexif[0].photos.photo[i].title;
@@ -29,7 +73,8 @@ router.get('/getPopular', async (req, res) => {
     exif_j[i].MyFarm = dataexif[0].photos.photo[i].farm;
     exif_j[i].MySecret = dataexif[0].photos.photo[i].secret;
 
-    // Temp doesnt work, when the check above "continues" it puts null values, somehow!
+
+
     // exif_j[i].MyExposureTime = temp.photo.exif[11].raw._content;
     // exif_j[i].MyExposureFStop = temp.photo.exif[12].raw._content;
     // exif_j[i].MyExposureType = temp.photo.exif[13].raw._content;
@@ -41,6 +86,7 @@ router.get('/getPopular', async (req, res) => {
     let id = exif_j[i].MyId;
     let secret = exif_j[i].MySecret;
     exif_j[i].MyURL = `https://farm${farm_id}.staticflickr.com/${server_id}/${id}_${secret}.jpg`
+    exif_j[i].status = "success"
 
     //   // saving photos.
     //   const post = new Photo({
@@ -57,9 +103,6 @@ router.get('/getPopular', async (req, res) => {
     //   res.json({ message: err});
     // }
 }
-
-
-
   // returning response of all json.
   res.json(exif_j);
 
