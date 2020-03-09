@@ -5,15 +5,31 @@ const PhotoSchema = mongoose.Schema({
     type: Number,
     required: true
   },
-  owner: {
-    type: String,
-    required: true
-  },
   title: {
     type: String,
     required: true
   },
   url: {
+    type: String,
+    required: true
+  },
+  exposure_type: {
+      type: String,
+      required: true
+  },
+  exposure_time: {
+    type: String,
+    required: true
+  },
+  exposure_fstop: {
+    type: String,
+    required: true
+  },
+  exposure_ISO: {
+    type: String,
+    required: true
+  },
+  exposure_flength: {
     type: String,
     required: true
   },
@@ -24,4 +40,4 @@ const PhotoSchema = mongoose.Schema({
 });
 
 
-module.exports = mongoose.model('Photo', PhotoSchema);
+module.exports = mongoose.model('Photos', PhotoSchema);
