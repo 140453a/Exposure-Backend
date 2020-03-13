@@ -5,8 +5,8 @@ const helper = require('../api_helper.js')
 const Photo = require('../models/Photo');
 
 // Gets 10 posts from today by default
-router.get('/getPopular/', async (req, res) => {
-  let dataexif = await helper.savePopular();
+router.get('/getPopular/:date?', async (req, res) => {
+  let dataexif = await helper.savePopular(req.params);
   let exif_j = []
   for (var i = 0; i < dataexif[1].length; i++) {
     temp = JSON.parse(dataexif[1][i]);
