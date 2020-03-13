@@ -73,7 +73,30 @@ router.get('/getPopular/:date?', async (req, res) => {
     exif_j[i].MyFarm = dataexif[0].photos.photo[i].farm;
     exif_j[i].MySecret = dataexif[0].photos.photo[i].secret;
 
-
+    // calculate the EV here.
+    let temp_iso = parseInt(exif_j[i].MyExposureISO);
+    if(temp_iso <= 18.5)                              {temp_iso = -5} //12
+    else if (temp_iso > 18.5 && temp_iso <= 37.5)     {temp_iso = -4} //25
+    else if (temp_iso > 37.5 && temp_iso <= 75)       {temp_iso = -3} //50
+    else if (temp_iso > 75 && temp_iso <= 150)        {temp_iso = -2} //100
+    else if (temp_iso > 150 && temp_iso <= 300)       {temp_iso = -1} //200
+    else if (temp_iso > 300 && temp_iso <= 600)       {temp_iso = 0} //400
+    else if (temp_iso > 600 && temp_iso <= 1200)      {temp_iso = 1} //800
+    else if (temp_iso > 1200 && temp_iso <= 2400)     {temp_iso = 2} //1600
+    else if (temp_iso > 2400 && temp_iso <= 4800)     {temp_iso = 3} //3200
+    else if (temp_iso > 4800 && temp_iso <= 9600)     {temp_iso = 4} //6400
+    else if (temp_iso > 9600 && temp_iso <= 19200)    {temp_iso = 5} //12800
+    else if (temp_iso > 19200 && temp_iso <= 38400)   {temp_iso = 6} //25600
+    else if (temp_iso > 38400 && temp_iso <= 76800)   {temp_iso = 7} //56200
+    else if (temp_iso > 76800 && temp_iso <= 153600)  {temp_iso = 8} //112400
+    else { // Iso is impossibly high, just get rid of this photograph.
+      exif_j[i].status = "fail";
+      continue;
+    }
+    // ev formula is log2(n^2/t)
+    let ev = Math.log2((exif_j[i].MyExposureFStop * exif_j[i].MyExposureFStop) / exif_j[i].MyExposureTime)
+    ev = ev + temp_iso;
+    exif_j[i].MyExposureEV = ev;
     // https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.jpg
     let farm_id = exif_j[i].MyFarm;
     let server_id = exif_j[i].MyServer;
@@ -93,7 +116,8 @@ router.get('/getPopular/:date?', async (req, res) => {
         exposure_time: exif_j[i].MyExposureTime,
         exposure_fstop: exif_j[i].MyExposureFStop,
         exposure_ISO: exif_j[i].MyExposureISO,
-        exposure_flength: exif_j[i].MyExposureFocal
+        exposure_flength: exif_j[i].MyExposureFocal,
+        exposure_EV: exif_j[i].MyExposureEV
       });
 
       try{

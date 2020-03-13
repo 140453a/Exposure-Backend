@@ -33,6 +33,10 @@ const PhotoSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  exposure_EV: {
+    type: Number,
+    required: true
+  },
   date: {
     type: Date,
     default: Date.now
