@@ -94,9 +94,14 @@ router.get('/getPopular/:date?', async (req, res) => {
       continue;
     }
     // ev formula is log2(n^2/t)
-    let ev = Math.log2((exif_j[i].MyExposureFStop * exif_j[i].MyExposureFStop) / exif_j[i].MyExposureTime)
+    let t_fstop = parseFloat(exif_j[i].MyExposureFStop);
+    let t_time = eval(exif_j[i].MyExposureTime);
+    let ev = Math.log2((t_fstop * t_fstop) / t_time)
     ev = ev + temp_iso;
+    ev = Math.round(ev);
     exif_j[i].MyExposureEV = ev;
+
+
     // https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.jpg
     let farm_id = exif_j[i].MyFarm;
     let server_id = exif_j[i].MyServer;
@@ -122,9 +127,9 @@ router.get('/getPopular/:date?', async (req, res) => {
 
       try{
         const savedPhoto = await photo.save();
-        console.log("Photo saved!")
-      }catch(err) {
-        console.log("Couldn't save photo!");
+          ; //console.log("Photo saved!")
+        }catch(err) {
+          console.log("Couldn't save photo!");
       }
     }
 }
