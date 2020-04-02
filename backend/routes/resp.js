@@ -4,6 +4,26 @@ const fetch = require('node-fetch');
 const helper = require('../api_helper.js')
 const Photo = require('../models/Photo');
 
+// Get 10 random photos filtered by EV
+router.get('/getRandom/:ev', async (req,res) => {
+  try {
+    // Random document code from: https://stackoverflow.com/questions/39277670/how-to-find-random-record-in-mongoose
+    // Get the count of all users
+    Photo.countDocuments({exposure_EV: req.params.ev}).exec(function (err, count) {
+
+    // Get a random entry
+    var random = Math.floor(Math.random() * count)
+
+    // Again query all users but only fetch one offset by our random #
+    Photo.findOne({exposure_EV: req.params.ev}).skip(random).exec(
+      function (err, result) {
+        res.json(result);
+      })
+})
+
+  }catch(err){ res.json({ message: err})}
+});
+
 // Gets 10 posts from today by default
 router.get('/getPopular/:date?', async (req, res) => {
   let dataexif = await helper.savePopular(req.params);
