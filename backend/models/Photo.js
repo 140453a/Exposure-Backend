@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+var random = require('mongoose-simple-random');
+
 
 const PhotoSchema = mongoose.Schema({
   photoid: {
@@ -42,6 +44,9 @@ const PhotoSchema = mongoose.Schema({
     default: Date.now
   }
 });
+
+// This is to get mongoose-simple-random to work
+PhotoSchema.plugin(random);
 
 
 module.exports = mongoose.model('Photos', PhotoSchema);

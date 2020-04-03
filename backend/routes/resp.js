@@ -5,23 +5,15 @@ const helper = require('../api_helper.js')
 const Photo = require('../models/Photo');
 
 // Get 10 random photos filtered by EV
-router.get('/getRandom/:ev', async (req,res) => {
-  try {
-    // Random document code from: https://stackoverflow.com/questions/39277670/how-to-find-random-record-in-mongoose
-    // Get the count of all users
-    Photo.countDocuments({exposure_EV: req.params.ev}).exec(function (err, count) {
-
-    // Get a random entry
-    var random = Math.floor(Math.random() * count)
-
-    // Again query all users but only fetch one offset by our random #
-    Photo.findOne({exposure_EV: req.params.ev}).skip(random).exec(
-      function (err, result) {
-        res.json(result);
-      })
-})
-
-  }catch(err){ res.json({ message: err})}
+router.get('/getRandom/:ev/:times', async (req,res) => {
+  // Parameters match parameters for "find"
+  var filter = { exposure_EV: { $in: [req.params.ev] } };
+  var options = {limit: req.params.times};
+  Photo.findRandom(filter, {}, options, function(err, results) {
+    if (!err) {
+      res.json(results); // 10 elements, name only, in genres "adventure" and "point-and-click"
+    }
+  });
 });
 
 // Gets 10 posts from today by default
