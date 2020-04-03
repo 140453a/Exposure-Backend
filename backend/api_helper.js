@@ -8,11 +8,11 @@ async function savePopular(date){
   var api_call = null
   try{
     if(date.date === undefined){
-        api_call = await fetch(`https://www.flickr.com/services/rest/?method=flickr.interestingness.getList&format=json&nojsoncallback=1&per_page=15&api_key=${KEY}`,
+        api_call = await fetch(`https://www.flickr.com/services/rest/?method=flickr.interestingness.getList&format=json&nojsoncallback=1&per_page=3&api_key=${KEY}`,
         {method: "GET",
         headers: {}});
     } else {
-      api_call = await fetch(`https://www.flickr.com/services/rest/?method=flickr.interestingness.getList&date=${date.date}&format=json&nojsoncallback=1&per_page=15&api_key=${KEY}`,
+      api_call = await fetch(`https://www.flickr.com/services/rest/?method=flickr.interestingness.getList&date=${date.date}&format=json&nojsoncallback=1&per_page=500&api_key=${KEY}`,
       {method: "GET",
       headers: {}});
     }
